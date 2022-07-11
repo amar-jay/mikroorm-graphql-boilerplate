@@ -48,6 +48,7 @@ const { createClient } = require("redis")
 let redisClient = createClient({ legacyMode: true })
 redisClient.connect().catch(console.error)
 
+
 app.use(
   session({
     store: new RedisStore({ client: redisClient }),
