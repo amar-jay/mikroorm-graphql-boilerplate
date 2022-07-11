@@ -9,6 +9,7 @@ import microConfig from './mikro-orm.config'
 import { FooResolver } from './resolvers/FooResolver'
 import { UserResolver } from './resolvers/UserResolver'
 import { Foo } from './entities/Foo'
+import { Post } from './entities/Post'
 import { buildSchema } from 'type-graphql'
 
 const main = async () => {
@@ -16,12 +17,15 @@ const main = async () => {
 	const orm = await MikroORM.init(microConfig)
 	await orm.getMigrator().up() //run migrations first
   
-//	const post = orm.em.create(Foo, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
-//	await orm.em.persistAndFlush(post)
+  
+	const post = orm.em.create(Post, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
+	const foo = orm.em.create(Foo, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
+	await orm.em.persistAndFlush(post)
+	await orm.em.persistAndFlush(foo)
 
-//	const posts = await orm.em.find(Foo, {})
-//	console.clear()
-//	console.log(posts)
+	const posts = await orm.em.find(Foo, {})
+	console.clear()
+	console.log(posts)
 
 
 	//Middleware
@@ -35,7 +39,7 @@ const main = async () => {
 		context: () => ({ em: orm.em })
 	})
 
-	await apolloServer.start()
+	// await apolloServer.start()
 	apolloServer.applyMiddleware({ app })
 
 	app.listen(__port, () => {

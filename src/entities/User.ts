@@ -12,11 +12,15 @@ export class User {
   @Field(() => String)
   @Property({ type: 'date', default: 'NOW()' })
   	createdAt: Date = new Date()
+  
+  @Field()
+  @Property({ type: 'text', unique: true })
+  	email: string
 
   @Field()
   @Property({ type: 'text', unique: true })
-  	name: string
+  	name!: string
 
   @Property({ type: 'text', length: 100 })
-  	password: string
+  	password!: string
 }
