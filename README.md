@@ -1,4 +1,4 @@
-# This is a boilerplate of Mikro-orm
+# This is a boilerplate of Mikro-orm, Apollo GraphQl and express
 - It contains express config attached
 - has Entities samples
 - Organized build
@@ -6,6 +6,9 @@
 - has env variable security 
 - has eslint and prettier 
 
+- express server
+- apollo graphql
+- type graphql schema
 
 
 # To Use It
