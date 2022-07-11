@@ -30,15 +30,6 @@ export class UserResolver {
 		return em.find(User, {})
 	}
 
-    // GETONE
-    @Query(() => User)
-  user(
-        @Arg('name', () => Int) name: string,
-        @Ctx() { em }: { em: IContext['em']},
-  ):Promise<User | null> {
-    	return em.findOne(User, { name })
-  }
-
     // CREATE
     @Mutation(() => User)
     async register(
@@ -59,7 +50,12 @@ export class UserResolver {
 
       const hashedPassword = await argon2.hash(password)
     	const user = em.create(User, { name, email, password: hashedPassword,createdAt: new Date() })
-    	await em.persistAndFlush(user)
+      try {
+        await em.persistAndFlush(user)
+      } catch (error) {
+        return { errors: [{field: 'name', message: 'User already exists' }]}
+      }
+
     	return {user}
     }
 

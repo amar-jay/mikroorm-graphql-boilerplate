@@ -12,9 +12,10 @@ type Foo {
 
 type Mutation {
   createPost(title: String!): Foo!
-  createUser(name: String!, password: String!): User!
   deletePost(id: Int!): Boolean!
   deleteUser(name: Int!, password: String!): Boolean!
+  login(options: UserPswdInput!): User!
+  register(options: UserPswdInput!): User!
   updatePost(id: Int!, title: String!): Foo!
   updateUser(name: String!, password: String!): User!
 }
@@ -24,12 +25,18 @@ type Query {
   hello: String!
   post(id: Int!): Foo!
   posts: [Foo!]!
-  user(name: Int!): User!
   users: [User!]!
 }
 
 type User {
   createdAt: String!
+  email: String!
   id: Int!
   name: String!
+}
+
+input UserPswdInput {
+  email: String!
+  name: String!
+  password: String!
 }
