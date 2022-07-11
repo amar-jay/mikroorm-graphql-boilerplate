@@ -25,7 +25,6 @@ type Query {
   hello: String!
   post(id: Int!): Foo!
   posts: [Foo!]!
-  users: [User!]!
 }
 
 type User {
