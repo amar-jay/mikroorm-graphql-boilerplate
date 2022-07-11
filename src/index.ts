@@ -16,12 +16,12 @@ const main = async () => {
 	const orm = await MikroORM.init(microConfig)
 	await orm.getMigrator().up() //run migrations first
   
-	const post = orm.em.create(Foo, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
-	await orm.em.persistAndFlush(post)
+//	const post = orm.em.create(Foo, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
+//	await orm.em.persistAndFlush(post)
 
-	const posts = await orm.em.find(Foo, {})
-	console.clear()
-	console.log(posts)
+//	const posts = await orm.em.find(Foo, {})
+//	console.clear()
+//	console.log(posts)
 
 
 	//Middleware
