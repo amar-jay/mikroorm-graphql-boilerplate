@@ -1,8 +1,8 @@
 import { MikroORM } from '@mikro-orm/core'
 import path from 'path'
 import { __password,  __user, __db } from './constants'
-import { Post } from './entities/Post'
-import { User } from './entities/User'
+import { Foo } from './entities/Foo'
+import { User } from './entities/Foo'
 
 export default {
 	migrations: {
@@ -14,6 +14,6 @@ export default {
 	user: __user,
 	password: __password,
 	dbName: __db,
-	entities: [Post, User],
+	entities: [Foo, User],
 	debug: true, // return all queries in console in dev
 } as Parameters<typeof MikroORM.init>[0]

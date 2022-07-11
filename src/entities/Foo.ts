@@ -1,6 +1,6 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 import { Field, Int, ObjectType } from 'type-graphql'
-// import { ObjectCriteriaNode } from "@mikro-orm/postgresql";
 
 @ObjectType()
 @Entity()

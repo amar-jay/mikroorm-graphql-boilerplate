@@ -4,7 +4,7 @@ import { MikroORM } from '@mikro-orm/core'
 import { __port } from './constants'
 import microConfig from './mikro-orm.config'
 
-import { Post } from './entities/Post'
+import { Foo } from './entities/Foo'
 import { buildSchema } from 'type-graphql'
 import { ApolloServer } from 'apollo-server-express'
 
@@ -12,10 +12,10 @@ const main = async () => {
 	const orm = await MikroORM.init(microConfig)
 	await orm.getMigrator().up() //run migrations first
   
-	const post = orm.em.create(Post, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
+	const post = orm.em.create(Foo, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
 	await orm.em.persistAndFlush(post)
 
-	const posts = await orm.em.find(Post, {})
+	const posts = await orm.em.find(Foo, {})
 	console.log(posts)
 
 	const app = express()
