@@ -1,13 +1,15 @@
 import 'reflect-metadata'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
-
+import session from "express-session"
+import connectRedis from "connect-redis"
+import { buildSchema } from 'type-graphql'
 
 import { __port } from './constants'
 import { FooResolver } from './resolvers/FooResolver'
 import { UserResolver } from './resolvers/UserResolver'
 import { Foo } from './entities/Foo'
-import { buildSchema } from 'type-graphql'
+
 
 const main = async () => {
 	const app = express()
@@ -38,6 +40,22 @@ const main = async () => {
 
 	await apolloServer.start()
 	apolloServer.applyMiddleware({ app })
+	
+let RedisStore = connectRedis(session)
+
+// redis@v4
+const { createClient } = require("redis")
+let redisClient = createClient({ legacyMode: true })
+redisClient.connect().catch(console.error)
+
+app.use(
+  session({
+    store: new RedisStore({ client: redisClient }),
+    saveUninitialized: false,
+    secret: "keyboard cat",
+    resave: false,
+  })
+)
 
 	app.listen(__port, () => {
 		console.log(`server started at http://localhost:${__port}/graphql`)
@@ -47,3 +65,4 @@ const main = async () => {
 }
 
 main().catch((err) => console.error(err))
+
