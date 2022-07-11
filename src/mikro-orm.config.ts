@@ -1,13 +1,15 @@
 import { MikroORM } from '@mikro-orm/core'
-import path from 'path'
 import { __password,  __user, __db } from './constants'
 import { Foo } from './entities/Foo'
-import { User } from './entities/Foo'
+import { User } from './entities/User'
 
 export default {
 	migrations: {
-		path: path.join(__dirname, 'migrations'),
-		pattern: /^[\w-]+\d+\.[t]s$/,
+		// pathT: undefined,
+		path: './src/migrations',
+		pattern: /^[\w-]+\d+.*\.js$/,
+		glob: '!(*.d).{js,ts}',
+		emit: 'ts'
 	},
 	allowGlobalContext: true,
 	type: 'postgresql',
