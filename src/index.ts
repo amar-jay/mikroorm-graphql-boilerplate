@@ -41,6 +41,7 @@ const main = async () => {
 	app.listen(__port, () => {
 		console.log(`server started at http://localhost:${__port}/graphql`)
 	}
+	
 	)
 }
 
