@@ -2,9 +2,9 @@ import { InputType, Field } from "type-graphql";
 @InputType()
 export class UserPswdInput {
   @Field()
-  email: string;
+  email!: string;
   @Field()
-  name: string;
+  name!: string;
   @Field()
-  password: string;
+  password!: string;
 }

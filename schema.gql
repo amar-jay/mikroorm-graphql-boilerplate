@@ -3,6 +3,12 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type FieldError {
+  field: String!
+  message: String!
+  value: String!
+}
+
 type Foo {
   createdAt: String!
   id: Int!
@@ -11,21 +17,32 @@ type Foo {
 }
 
 type Mutation {
-  createPost(title: String!): Foo!
+  changeFoo(id: Int!, title: String!): Foo!
+  createPost(title: String!): Post!
   deletePost(id: Int!): Boolean!
   deleteUser(options: Int!): Boolean!
   login(options: UserPswdInput!): User!
-  register(options: UserPswdInput!): User!
-  updatePost(id: Int!, title: String!): Foo!
+  makeFoo(title: String!): Foo!
+  register(email: String!, name: String!, password: String!): UserResponse!
+  updatePost(id: Int!, title: String!): Post!
   updateUser(name: String!, password: String!): User!
 }
 
+type Post {
+  createdAt: String!
+  id: Int!
+  title: String!
+  updatedAt: String!
+}
+
 type Query {
+  aFoo(id: Int!): Foo!
+  foos: [Foo!]!
   hello: String!
   loggedIn: User!
-  post(id: Int!): Foo!
-  posts: [Foo!]!
-  users: [String!]!
+  post(id: Int!): Post!
+  posts: [Post!]!
+  users: UserResponse!
 }
 
 type User {
@@ -39,4 +56,9 @@ input UserPswdInput {
   email: String!
   name: String!
   password: String!
+}
+
+type UserResponse {
+  errors: [FieldError!]
+  user: User
 }

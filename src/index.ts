@@ -11,34 +11,13 @@ import { FooResolver } from "./resolvers/FooResolver";
 import { UserResolver } from "./resolvers/UserResolver";
 import { MikroORM } from "@mikro-orm/core";
 import mikroOrmConfig from "./mikro-orm.config";
-// import { Post } from "./entities/Post";
 import { PostResolver } from "./resolvers/PostResolver";
-// import { Foo } from "./entities/Foo";
+import cors from "cors";
 
 const main = async () => {
   const app = express();
   const orm = await MikroORM.init(mikroOrmConfig);
-  // await orm.getMigrator().up(); //run migrations first
-  // const orm = {
-  //   em: { find: (_: unknown, {}) => {}, findOne: (_: unknown) => {} },
-  // };
-
-  // const post = orm.em.create(
-  //   Post,
-  //   {
-  //     title: "My name is Manan 🥳",
-  //     updatedAt: new Date(),
-  //     createdAt: new Date(),
-  //   },
-  //   {}
-  // );
-  // const foo = orm.em.create(Foo, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
-  // await orm.em.persistAndFlush(post)
-  // await orm.em.persistAndFlush(foo)
-
-  //   const posts = await orm.em.find(Foo, {});
-  // console.clear();
-  //   console.log(posts);
+  await orm.getMigrator().up(); //run migrations first
 
   //Sessions
   const RedisStore = connectRedis(session);
@@ -46,6 +25,7 @@ const main = async () => {
   let redisClient = createClient({ legacyMode: true });
   redisClient.connect().catch(console.error);
 
+  app.use(cors());
   app.use(
     session({
       name: "qid",

@@ -14,7 +14,6 @@
   "license": "ISC",
   "mikro-orm": {
     "configPaths": [
-      "./src/mikro-orm.config.ts",
       "./dist/mikro-orm.config.js"
     ],
     "tsConfigPath": "./tsconfig.json"
@@ -40,6 +39,7 @@
     "apollo-server-express": "^3.7.0",
     "argon2": "^0.28.7",
     "connect-redis": "^6.1.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-session": "^1.17.3",

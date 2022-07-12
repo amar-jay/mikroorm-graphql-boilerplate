@@ -9,7 +9,7 @@ import { Foo } from '../entities/Foo'
 export class FooResolver {
     // GETALL
     @Query(() => [Foo])
-	posts(
+	foos(
         @Ctx() { em }: { em: IContext['em'] },
 	):Promise<Foo[]> {
 		return em.find(Foo, {})
@@ -17,7 +17,7 @@ export class FooResolver {
 
     // GETONE
     @Query(() => Foo)
-    post(
+    aFoo(
         @Arg('id', () => Int) id: number,
         @Ctx() { em }: { em: IContext['em']},
     ):Promise<Foo | null> {
@@ -26,7 +26,7 @@ export class FooResolver {
 
     // CREATE
     @Mutation(() => Foo)
-    async createPost(
+    async makeFoo(
         @Arg('title') title: string,
         @Ctx() { em }: { em: IContext['em']},
     ):Promise<Foo | null> {
@@ -37,7 +37,7 @@ export class FooResolver {
 
     // UPDATE
     @Mutation(() => Foo)
-    async updatePost(
+    async changeFoo(
         @Arg('id', () => Int) id: number,
         @Arg('title') title: string,
         @Ctx() { em }: { em: IContext['em']},

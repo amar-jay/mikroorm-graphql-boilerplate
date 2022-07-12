@@ -16,9 +16,9 @@ import * as argon2 from "argon2";
 @ObjectType()
 class FieldError {
   @Field()
-  field: string;
+  field!: string;
   @Field()
-  message: string;
+  message!: string;
   @Field()
   value?: string;
 }
@@ -35,26 +35,50 @@ class UserResponse {
 @Resolver()
 export class UserResolver {
   // GETALL
-  @Query(() => [String])
-  users(@Ctx() { em, req }: IContext): Promise<User[]> {
-    if (req.session.userId) {
-      em.findOneOrFail(User, { id: req.session.userId }).catch((e) => {
+  @Query(() => UserResponse)
+  users(
+    @Ctx() { em, req }: IContext
+  ): Promise<User[]> | { errors: FieldError[] } {
+    let id = req.session.userId;
+    if (id && id !== null) {
+      em.findOne(User, { id }).catch(() => {
         req.session.userId = null;
-        console.error(e);
+        return {
+          errors: [{ field: "check all users", message: "Users not Found" }],
+        };
       });
+      const users = em.find(User, {});
+      return users;
     }
 
-    return em.find(User, {});
+    return {
+      errors: [
+        { field: "check all users", message: "Users not Found" },
+      ] as FieldError[],
+    };
   }
 
   // CREATE
-  @Mutation(() => User)
+  @Mutation(() => UserResponse)
   async register(
-    @Arg("options") options: UserPswdInput,
+    @Arg("name") name: string,
+    @Arg("password") password: string,
+    @Arg("email") email: string,
     @Ctx() { em, req }: IContext
   ): Promise<UserResponse> {
-    const { name, email, password } = options;
-    if (!(name.length < 3)) {
+    // const { name password, email } = {name, password, email};
+    if (!name || !email || !password) {
+      return {
+        errors: [
+          {
+            field: "FieldsNotProvided",
+            message: "Name,ff email and password are required",
+          },
+        ],
+      };
+    }
+
+    if (name.length < 3) {
       return {
         errors: [{ field: "name", message: "Name length is too short" }],
       };
@@ -63,7 +87,7 @@ export class UserResolver {
       return { errors: [{ field: "email", message: "Invalid Email" }] };
     }
 
-    if (!(password.length < 7)) {
+    if (password.length < 7) {
       return {
         errors: [
           { field: "password", message: "Password length is too short" },
@@ -81,7 +105,9 @@ export class UserResolver {
     try {
       await em.persistAndFlush(user);
     } catch (error) {
-      return { errors: [{ field: "name", message: "User already exists" }] };
+      return {
+        errors: [{ field: "ExistingUser", message: "User already exists" }],
+      };
     }
 
     req.session.userId = user.id;
@@ -96,6 +122,10 @@ export class UserResolver {
     const { name, password } = options;
 
     const user = await em.findOne(User, { name });
+    if (!user!.id || !req?.session?.userId) {
+      return { errors: [{ field: "id", message: "User not found by id" }] };
+    }
+
     if (!user) {
       return { errors: [{ field: "name", message: "User not found" }] };
     }
