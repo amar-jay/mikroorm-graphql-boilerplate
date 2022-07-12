@@ -11,7 +11,8 @@ import { FooResolver } from "./resolvers/FooResolver";
 import { UserResolver } from "./resolvers/UserResolver";
 import { MikroORM } from "@mikro-orm/core";
 import mikroOrmConfig from "./mikro-orm.config";
-import { Post } from "./entities/Post";
+// import { Post } from "./entities/Post";
+import { PostResolver } from "./resolvers/PostResolver";
 // import { Foo } from "./entities/Foo";
 
 const main = async () => {
@@ -39,7 +40,6 @@ const main = async () => {
   // console.clear();
   //   console.log(posts);
 
-  // await orm.em.getMigrator().up(); //run migrations first
   //Sessions
   const RedisStore = connectRedis(session);
 
@@ -71,7 +71,7 @@ const main = async () => {
   // apollo server with express and type-graphql
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [FooResolver, UserResolver],
+      resolvers: [FooResolver, UserResolver, PostResolver],
       emitSchemaFile: true,
       validate: false,
     }),
