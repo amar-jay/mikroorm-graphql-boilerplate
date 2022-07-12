@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 
 export interface IContext {
   em: EntityManager<any> & EntityManager<IDatabaseDriver<Connection>>;
-  req: Request;
+  req: Request & {
+    session: { userId: number | null; [prop: string]: string | number | null };
+  };
   res: Response;
 }

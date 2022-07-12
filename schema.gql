@@ -13,7 +13,7 @@ type Foo {
 type Mutation {
   createPost(title: String!): Foo!
   deletePost(id: Int!): Boolean!
-  deleteUser(name: Int!, password: String!): Boolean!
+  deleteUser(options: Int!): Boolean!
   login(options: UserPswdInput!): User!
   register(options: UserPswdInput!): User!
   updatePost(id: Int!, title: String!): Foo!
@@ -21,10 +21,11 @@ type Mutation {
 }
 
 type Query {
-  foobar: String!
   hello: String!
+  loggedIn: User!
   post(id: Int!): Foo!
   posts: [Foo!]!
+  users: [String!]!
 }
 
 type User {

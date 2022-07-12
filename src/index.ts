@@ -9,25 +9,37 @@ import { createClient } from "redis";
 import { __port, __prod, __sessions_secret } from "./constants";
 import { FooResolver } from "./resolvers/FooResolver";
 import { UserResolver } from "./resolvers/UserResolver";
-import { Foo } from "./entities/Foo";
+import { MikroORM } from "@mikro-orm/core";
+import mikroOrmConfig from "./mikro-orm.config";
+import { Post } from "./entities/Post";
+// import { Foo } from "./entities/Foo";
 
 const main = async () => {
   const app = express();
-  // const orm = await MikroORM.init(microConfig)
-  // await orm.getMigrator().up() //run migrations first
-  const orm = {
-    em: { find: (_: unknown, {}) => {}, findOne: (_: unknown) => {} },
-  };
+  const orm = await MikroORM.init(mikroOrmConfig);
+  // await orm.getMigrator().up(); //run migrations first
+  // const orm = {
+  //   em: { find: (_: unknown, {}) => {}, findOne: (_: unknown) => {} },
+  // };
 
-  // const post = orm.em.create(Post, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
+  // const post = orm.em.create(
+  //   Post,
+  //   {
+  //     title: "My name is Manan 🥳",
+  //     updatedAt: new Date(),
+  //     createdAt: new Date(),
+  //   },
+  //   {}
+  // );
   // const foo = orm.em.create(Foo, { title: 'My name is Manan 🥳', updatedAt:new Date(), createdAt:new Date() }, {})
   // await orm.em.persistAndFlush(post)
   // await orm.em.persistAndFlush(foo)
 
   //   const posts = await orm.em.find(Foo, {});
-  console.clear();
+  // console.clear();
   //   console.log(posts);
 
+  // await orm.em.getMigrator().up(); //run migrations first
   //Sessions
   const RedisStore = connectRedis(session);
 

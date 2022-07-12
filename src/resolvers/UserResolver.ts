@@ -19,6 +19,8 @@ class FieldError {
   field: string;
   @Field()
   message: string;
+  @Field()
+  value?: string;
 }
 
 @ObjectType()
@@ -32,17 +34,24 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-  // // GETALL
-  // @Query(() => [User])
-  // users(@Ctx() { em }: IContext["em"]): Promise<User[]> {
-  //   return em.find(User, {});
-  // }
+  // GETALL
+  @Query(() => [String])
+  users(@Ctx() { em, req }: IContext): Promise<User[]> {
+    if (req.session.userId) {
+      em.findOneOrFail(User, { id: req.session.userId }).catch((e) => {
+        req.session.userId = null;
+        console.error(e);
+      });
+    }
+
+    return em.find(User, {});
+  }
 
   // CREATE
   @Mutation(() => User)
   async register(
     @Arg("options") options: UserPswdInput,
-    @Ctx() { em, req, res }: IContext
+    @Ctx() { em, req }: IContext
   ): Promise<UserResponse> {
     const { name, email, password } = options;
     if (!(name.length < 3)) {
@@ -75,6 +84,7 @@ export class UserResolver {
       return { errors: [{ field: "name", message: "User already exists" }] };
     }
 
+    req.session.userId = user.id;
     return { user };
   }
 
@@ -95,7 +105,7 @@ export class UserResolver {
       return { errors: [{ field: "password", message: "incorrect password" }] };
     }
 
-    (req.session as any).userId = user.id;
+    req.session.userId = user.id;
     return {
       user,
     };
@@ -105,7 +115,7 @@ export class UserResolver {
   async updateUser(
     @Arg("name", () => String) name: string,
     @Arg("password") password: string,
-    @Ctx() { em, req, res }: IContext
+    @Ctx() { em }: IContext
   ): Promise<User | null> {
     const user = await em.findOne(User, { name });
     if (!user) {
@@ -119,20 +129,32 @@ export class UserResolver {
   // DELETE
   @Mutation(() => Boolean)
   async deleteUser(
-    @Arg("name", () => Int) name: string,
-    @Arg("password", () => String) password: string,
+    @Arg("options", () => Int) options: UserPswdInput,
     @Ctx() { em }: { em: IContext["em"] }
-  ): Promise<boolean> {
-    const user = await em.findOne(User, { name, password });
+  ): Promise<UserResponse | boolean> {
+    const user = await em.findOne(User, options);
     if (!user) {
-      return false;
+      return { errors: [{ field: "name", message: "User not found" }] };
     }
     await em.removeAndFlush(user);
     return true;
   }
 
-  @Query(() => String)
-  foobar() {
-    return "Hello Manan!";
+  @Query(() => User)
+  async loggedIn(@Ctx() { em, req }: IContext): Promise<UserResponse> {
+    if (!req.session.userId) {
+      return {
+        errors: [{ field: "LogInCheck", message: "No User is logged in" }],
+      };
+    }
+    const user = await em.findOne(User, { id: req.session.userId })!;
+    if (!user) {
+      return {
+        errors: [{ field: "logInCheck", message: "User not Found" }],
+      };
+    }
+    return {
+      user,
+    };
   }
 }
