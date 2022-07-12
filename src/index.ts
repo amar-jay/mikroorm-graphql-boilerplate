@@ -47,6 +47,10 @@ const main = async () => {
   );
 
   //Middleware
+  const __path = `http://localhost:${__port}`;
+  const corsOptions = {
+    origin: [__path, "https://studio.apollographql.com"],
+  };
 
   // apollo server with express and type-graphql
   const apolloServer = new ApolloServer({
@@ -59,11 +63,11 @@ const main = async () => {
   });
 
   await apolloServer.start();
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   // Start the server
   app.listen(__port, () => {
-    console.log(`server started at http://localhost:${__port}/graphql`);
+    console.log(`server started at ${__path}/graphql`);
   });
 };
 
